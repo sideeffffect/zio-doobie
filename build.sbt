@@ -44,6 +44,7 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     moduleFilter(organization = "com.zaxxer", name = "HikariCP"),
     moduleFilter(organization = "org.slf4j", name = "slf4j-api")
   ),
+  mimaFailOnNoPrevious := false,
   mimaReportBinaryIssues := {}
 )
 
