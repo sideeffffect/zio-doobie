@@ -3,6 +3,7 @@ ThisBuild / turbo := true
 
 lazy val root = project
   .in(file("."))
+  .settings(commonSettings)
   .settings(
     name := "zio-doobie",
     publish / skip := true
