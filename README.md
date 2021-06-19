@@ -8,7 +8,7 @@ ZIO wrapper for [Doobie](https://tpolecat.github.io/doobie/) with [Liquibase](ht
 
 
 ```scala
-"com.github.sideeffffect" % "zio-doobie-liquibase" % "<version>"
+"com.github.sideeffffect" %% "zio-doobie-liquibase" % "<version>"
 ```
 
 [Link-GitHubActions]: https://github.com/sideeffffect/zio-doobie/actions?query=workflow%3ARelease+branch%3Amaster "GitHub Actions link"
