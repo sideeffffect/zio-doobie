@@ -7,6 +7,7 @@ lazy val root = project
   .settings(
     name := "zio-doobie",
     publish / skip := true,
+    mimaReportBinaryIssues := {},
   )
   .aggregate(
     zioDoobieLiquibase,
