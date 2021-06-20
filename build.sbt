@@ -6,10 +6,11 @@ lazy val root = project
   .settings(commonSettings)
   .settings(
     name := "zio-doobie",
-    publish / skip := true
+    publish / skip := true,
+    mimaReportBinaryIssues := {},
   )
   .aggregate(
-    zioDoobieLiquibase
+    zioDoobieLiquibase,
   )
 
 lazy val zioDoobieLiquibase = project
@@ -23,12 +24,13 @@ lazy val zioDoobieLiquibase = project
       Dependencies.zio,
       Dependencies.zioCats,
       Dependencies.zioConfig,
-      Dependencies.zioConfigMagnolia
-    )
+      Dependencies.zioConfigMagnolia,
+    ),
   )
   .enablePlugins(BuildInfoPlugin)
 
 lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings ++ List(
+  crossScalaVersions := List(DecentScala.decentScalaVersion213, DecentScala.decentScalaVersion212),
   organization := "com.github.sideeffffect",
   homepage := Some(url("https://github.com/sideeffffect/zio-doobie")),
   licenses := List("APLv2" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
@@ -37,16 +39,14 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
       "sideeffffect",
       "Ondra Pelech",
       "ondra.pelech@gmail.com",
-      url("https://github.com/sideeffffect")
-    )
+      url("https://github.com/sideeffffect"),
+    ),
   ),
   testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
   missinglinkExcludedDependencies ++= List(
     moduleFilter(organization = "com.zaxxer", name = "HikariCP"),
-    moduleFilter(organization = "org.slf4j", name = "slf4j-api")
+    moduleFilter(organization = "org.slf4j", name = "slf4j-api"),
   ),
-  ThisBuild / mimaFailOnNoPrevious := false,
-  mimaReportBinaryIssues := {}
 )
 
 addCommandAlias("ci", "; check; +publishLocal")

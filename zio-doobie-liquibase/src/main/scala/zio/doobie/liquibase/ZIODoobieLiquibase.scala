@@ -22,7 +22,7 @@ object ZIODoobieLiquibase {
       password: String,
       driverClassName: String,
       threadPoolSize: Int,
-      liquibaseChangeLogFile: String
+      liquibaseChangeLogFile: String,
   )
 
   object Config {
