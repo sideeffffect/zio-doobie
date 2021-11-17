@@ -51,6 +51,7 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
   ),
   mimaBinaryIssueFilters ++= List(
     ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo"),
+    ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo$"),
   ),
 )
 
