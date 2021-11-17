@@ -1,3 +1,5 @@
+import com.typesafe.tools.mima.core._
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / turbo := true
 
@@ -46,6 +48,10 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
   missinglinkExcludedDependencies ++= List(
     moduleFilter(organization = "com.zaxxer", name = "HikariCP"),
     moduleFilter(organization = "org.slf4j", name = "slf4j-api"),
+  ),
+  mimaBinaryIssueFilters ++= List(
+    ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo"),
+    ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo$"),
   ),
 )
 
