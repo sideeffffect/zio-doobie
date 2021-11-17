@@ -50,8 +50,6 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     moduleFilter(organization = "org.slf4j", name = "slf4j-api"),
   ),
   mimaBinaryIssueFilters ++= List(
-    ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo"),
-    ProblemFilters.exclude[MissingClassProblem]("com.github.sideeffffect.ziodoobieliquibase.BuildInfo$"),
   ),
 )
 

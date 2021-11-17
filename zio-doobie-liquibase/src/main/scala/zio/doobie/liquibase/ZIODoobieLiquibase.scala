@@ -51,7 +51,7 @@ object ZIODoobieLiquibase {
       transactor <- HikariTransactor
         .newHikariTransactor[Task](config.driverClassName, config.url, config.user, config.password, ce, be)
         .toManagedZIO
-      _ <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
+      () <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
     } yield transactor
   }
 
