@@ -8,8 +8,6 @@ import liquibase.resource.ClassLoaderResourceAccessor
 import liquibase.{Contexts, Liquibase}
 import zio._
 import zio.blocking.{Blocking, effectBlocking}
-import zio.config.ConfigDescriptor
-import zio.config.magnolia.DeriveConfigDescriptor
 import zio.interop.catz._
 
 import java.sql.Connection
@@ -25,10 +23,7 @@ object ZIODoobieLiquibase {
       liquibaseChangeLogFile: String,
   )
 
-  object Config {
-    implicit lazy val configDescriptor: ConfigDescriptor[Config] =
-      DeriveConfigDescriptor.descriptor[Config]
-  }
+  object Config extends ConfigVersionSpecific
 
   private def runMigration(connection: Connection, changeLogFile: String): Unit = {
     val liquibase =
@@ -51,7 +46,7 @@ object ZIODoobieLiquibase {
       transactor <- HikariTransactor
         .newHikariTransactor[Task](config.driverClassName, config.url, config.user, config.password, ce, be)
         .toManagedZIO
-      () <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
+      _ <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
     } yield transactor
   }
 
