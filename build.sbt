@@ -32,7 +32,7 @@ lazy val zioDoobieLiquibase = project
   .enablePlugins(BuildInfoPlugin)
 
 lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings ++ List(
-  crossScalaVersions := List(DecentScala.decentScalaVersion213, DecentScala.decentScalaVersion212),
+  crossScalaVersions -= DecentScala.decentScalaVersion211,
   organization := "com.github.sideeffffect",
   homepage := Some(url("https://github.com/sideeffffect/zio-doobie")),
   licenses := List("APLv2" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
@@ -49,6 +49,7 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     moduleFilter(organization = "com.zaxxer", name = "HikariCP"),
     moduleFilter(organization = "org.slf4j", name = "slf4j-api"),
   ),
+  mimaReportBinaryIssues := {},
   mimaBinaryIssueFilters ++= List(
   ),
 )
