@@ -4,11 +4,27 @@
 | --- | --- |
 | [![Build Status][Badge-GitHubActions]][Link-GitHubActions] | [![Release Artifacts][Badge-SonatypeReleases]][Link-SonatypeReleases] |
 
-ZIO wrapper for [Doobie](https://tpolecat.github.io/doobie/) with [Liquibase](https://www.liquibase.org/).
+## Liquibase
 
+ZIO wrapper for [Doobie](https://tpolecat.github.io/doobie/) with [Liquibase](https://www.liquibase.org/).
 
 ```scala
 "com.github.sideeffffect" %% "zio-doobie-liquibase" % "<version>"
+```
+
+This library comes with ready-made case class for configuration `ZIODoobieLiquibase.Config` and a layer `ZIODoobieLiquibase.layer` that you can use when composing your application from ZLayers.
+
+```scala
+final case class Config(
+    url: String,
+    user: String,
+    password: String,
+    driverClassName: String,
+    threadPoolSize: Int,
+    liquibaseChangeLogFile: String,
+)
+
+ZIODoobieLiquibase.layer: RLayer[Blocking with Has[ZIODoobieLiquibase.Config], Has[Transactor[Task]]]
 ```
 
 [Link-GitHubActions]: https://github.com/sideeffffect/zio-doobie/actions?query=workflow%3ARelease+branch%3Amaster "GitHub Actions link"

@@ -1,6 +1,5 @@
 package zio.doobie.liquibase
 
-import cats.effect.Blocker
 import doobie.hikari.HikariTransactor
 import doobie.{ExecutionContexts, Transactor}
 import liquibase.database.jvm.JdbcConnection
@@ -8,6 +7,7 @@ import liquibase.resource.ClassLoaderResourceAccessor
 import liquibase.{Contexts, Liquibase}
 import zio._
 import zio.blocking.{Blocking, effectBlocking}
+import zio.clock.Clock
 import zio.interop.catz._
 
 import java.sql.Connection
@@ -39,17 +39,17 @@ object ZIODoobieLiquibase {
     }
   }
 
-  def make(config: Config): RManaged[Blocking, Transactor[Task]] = Managed.runtime.flatMap { implicit r: Runtime[Any] =>
-    for {
-      ce <- ExecutionContexts.fixedThreadPool[Task](config.threadPoolSize).toManagedZIO
-      be <- Blocker[Task].toManagedZIO
-      transactor <- HikariTransactor
-        .newHikariTransactor[Task](config.driverClassName, config.url, config.user, config.password, ce, be)
-        .toManagedZIO
-      _ <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
-    } yield transactor
+  def make(config: Config): RManaged[Blocking with Clock, Transactor[Task]] = Managed.runtime.flatMap {
+    implicit r: Runtime[Blocking with Clock] =>
+      for {
+        ce <- ExecutionContexts.fixedThreadPool[Task](config.threadPoolSize).toManagedZIO
+        transactor <- HikariTransactor
+          .newHikariTransactor[Task](config.driverClassName, config.url, config.user, config.password, ce)
+          .toManagedZIO
+        _ <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
+      } yield transactor
   }
 
-  val layer: RLayer[Blocking with Has[Config], Has[Transactor[Task]]] =
+  val layer: RLayer[Blocking with Clock with Has[Config], Has[Transactor[Task]]] =
     ZManaged.service[Config].flatMap(make).toLayer
 }
