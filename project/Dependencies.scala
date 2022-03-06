@@ -3,11 +3,11 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val doobie = "0.13.4"
+    val doobie = "1.0.0-RC2"
     val liquibase = "4.8.0"
     val zio = "1.0.13"
-    val zioCats = "2.5.1.0"
-    val zioConfig = "1.0.10"
+    val zioCats = "3.2.9.1"
+    val zioConfig = "2.0.0"
   }
 
   val doobie = "org.tpolecat" %% "doobie-hikari" % Versions.doobie
