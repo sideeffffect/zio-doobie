@@ -51,6 +51,7 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
   ),
   missinglinkIgnoreDestinationPackages ++= List(
     IgnoredPackage("org.osgi.framework"),
+    IgnoredPackage("java.sql"), // https://github.com/tpolecat/doobie/pull/1632
   ),
   mimaBinaryIssueFilters ++= List(
   ),
