@@ -1,7 +1,7 @@
 package zio.doobie.liquibase
 
 import doobie.hikari.HikariTransactor
-import doobie.{ExecutionContexts, Transactor, hikari}
+import doobie.{ExecutionContexts, Transactor}
 import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.ClassLoaderResourceAccessor
 import liquibase.{Contexts, Liquibase}
@@ -15,7 +15,7 @@ import java.sql.Connection
 object ZIODoobieLiquibase {
 
   final case class Config(
-      hikari: hikari.Config,
+      hikari: _root_.doobie.hikari.Config,
       liquibaseChangeLogFile: String,
   )
 
