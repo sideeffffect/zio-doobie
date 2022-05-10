@@ -15,11 +15,7 @@ import java.sql.Connection
 object ZIODoobieLiquibase {
 
   final case class Config(
-      url: String,
-      user: String,
-      password: String,
-      driverClassName: String,
-      threadPoolSize: Int,
+      hikari: _root_.doobie.hikari.Config,
       liquibaseChangeLogFile: String,
   )
 
@@ -42,9 +38,11 @@ object ZIODoobieLiquibase {
   def make(config: Config): RManaged[Blocking with Clock, Transactor[Task]] = Managed.runtime.flatMap {
     implicit r: Runtime[Blocking with Clock] =>
       for {
-        ce <- ExecutionContexts.fixedThreadPool[Task](config.threadPoolSize).toManagedZIO
+        // TODO: rework after https://github.com/tpolecat/doobie/pull/1690
+        // HikariConfig.DEFAULT_POOL_SIZE = 10
+        ce <- ExecutionContexts.fixedThreadPool[Task](config.hikari.maximumPoolSize.getOrElse(10)).toManagedZIO
         transactor <- HikariTransactor
-          .newHikariTransactor[Task](config.driverClassName, config.url, config.user, config.password, ce)
+          .fromConfig[Task](config.hikari, ce)
           .toManagedZIO
         _ <- migrate(transactor, config.liquibaseChangeLogFile).toManaged_
       } yield transactor

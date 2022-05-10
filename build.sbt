@@ -54,6 +54,8 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     IgnoredPackage("java.sql"), // https://github.com/tpolecat/doobie/pull/1632
   ),
   mimaBinaryIssueFilters ++= List(
+    ProblemFilters.exclude[DirectMissingMethodProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
+    ProblemFilters.exclude[IncompatibleResultTypeProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
   ),
 )
 
