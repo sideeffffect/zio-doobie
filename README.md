@@ -16,12 +16,8 @@ This library comes with ready-made case class for configuration `ZIODoobieLiquib
 
 ```scala
 final case class Config(
-    url: String,
-    user: String,
-    password: String,
-    driverClassName: String,
-    threadPoolSize: Int,
-    liquibaseChangeLogFile: String,
+  hikari: doobie.hikari.Config,
+  liquibaseChangeLogFile: String,
 )
 
 ZIODoobieLiquibase.layer: RLayer[Blocking with Has[ZIODoobieLiquibase.Config], Has[Transactor[Task]]]
