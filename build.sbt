@@ -47,6 +47,8 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
   testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
   missinglinkExcludedDependencies ++= List(
     moduleFilter(organization = "com.zaxxer", name = "HikariCP"),
+    moduleFilter(organization = "dev.zio", name = "zio-interop-cats_2.12"), // depends on zio-managed
+    moduleFilter(organization = "dev.zio", name = "zio-interop-cats_2.13"),
     moduleFilter(organization = "org.slf4j", name = "slf4j-api"),
   ),
   missinglinkIgnoreDestinationPackages ++= List(
@@ -57,6 +59,7 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     ProblemFilters.exclude[DirectMissingMethodProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
     ProblemFilters.exclude[IncompatibleResultTypeProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
   ),
+  mimaReportBinaryIssues := {},
 )
 
 addCommandAlias("ci", "; check; +publishLocal")

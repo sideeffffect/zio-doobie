@@ -20,7 +20,7 @@ final case class Config(
   liquibaseChangeLogFile: String,
 )
 
-ZIODoobieLiquibase.layer: RLayer[Blocking with Has[ZIODoobieLiquibase.Config], Has[Transactor[Task]]]
+ZIODoobieLiquibase.layer: RLayer[ZIODoobieLiquibase.Config, Transactor[Task]]
 ```
 
 [Link-GitHubActions]: https://github.com/sideeffffect/zio-doobie/actions?query=workflow%3ARelease+branch%3Amaster "GitHub Actions link"
