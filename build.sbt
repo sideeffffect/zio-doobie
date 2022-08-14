@@ -59,7 +59,6 @@ lazy val commonSettings: List[Def.Setting[_]] = DecentScala.decentScalaSettings 
     ProblemFilters.exclude[DirectMissingMethodProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
     ProblemFilters.exclude[IncompatibleResultTypeProblem]("zio.doobie.liquibase.ZIODoobieLiquibase#Config.*"),
   ),
-  mimaReportBinaryIssues := {},
 )
 
 addCommandAlias("ci", "; check; +publishLocal")
