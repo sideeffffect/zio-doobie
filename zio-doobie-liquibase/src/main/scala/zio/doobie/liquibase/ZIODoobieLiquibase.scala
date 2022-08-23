@@ -4,11 +4,13 @@ import doobie.hikari.HikariTransactor
 import doobie.{ExecutionContexts, Transactor}
 import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.ClassLoaderResourceAccessor
+import liquibase.ui.LoggerUIService
 import liquibase.{Contexts, Liquibase}
 import zio.*
 import zio.interop.catz.*
 
 import java.sql.Connection
+import scala.jdk.CollectionConverters.*
 
 object ZIODoobieLiquibase {
 
@@ -20,9 +22,11 @@ object ZIODoobieLiquibase {
   object Config extends ConfigVersionSpecific
 
   private def runMigration(connection: Connection, changeLogFile: String): Unit = {
-    val liquibase =
-      new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), new JdbcConnection(connection))
-    liquibase.update(new Contexts())
+    import liquibase.Scope
+    val instance = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), new JdbcConnection(connection))
+    // https://github.com/liquibase/liquibase/issues/2396
+    Scope.enter(Map[String, AnyRef](Scope.Attr.ui.name() -> new LoggerUIService()).asJava)
+    instance.update(new Contexts())
   }
 
   private def migrate(transactor: Transactor[Task], changeLogFile: String): Task[Unit] = ZIO.scoped {
