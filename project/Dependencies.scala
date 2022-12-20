@@ -7,7 +7,7 @@ object Dependencies {
     val liquibase = "4.18.0"
     val zio = "2.0.2"
     val zioCats = "3.3.0"
-    val zioConfig = "3.0.2"
+    val zioConfig = "3.0.6"
   }
 
   val doobie = "org.tpolecat" %% "doobie-hikari" % Versions.doobie
