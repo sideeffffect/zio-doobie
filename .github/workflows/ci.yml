@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
       - name: Coursier cache
-        uses: coursier/cache-action@v6.4.1
+        uses: coursier/cache-action@v6.4.2
       - name: sbt ci ${{ github.ref }}
         run: ./sbt ci
 
