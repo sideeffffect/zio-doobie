@@ -5,7 +5,7 @@ object Dependencies {
   object Versions {
     val doobie = "1.0.0-RC2"
     val liquibase = "4.19.1"
-    val zio = "2.0.2"
+    val zio = "2.0.9"
     val zioCats = "3.3.0"
     val zioConfig = "3.0.2"
   }
