@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val doobie = "1.0.0-RC2"
+    val doobie = "1.0.0-RC5"
     val liquibase = "4.20.0"
     val zio = "2.0.2"
     val zioCats = "3.3.0"
