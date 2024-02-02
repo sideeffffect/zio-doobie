@@ -36,7 +36,7 @@ object ZIODoobieLiquibase {
     // https://github.com/liquibase/liquibase/issues/2396
     Scope.enter(Map[String, AnyRef](Scope.Attr.ui.name() -> new LoggerUIService()).asJava)
     val result = updateCommand.execute().getResults.asScala
-    result.get("statusCode") match {
+    result.get("statusCode").asInstanceOf[Option[Int]] match {
       case None | Some(0) =>
       case _              => throw new RuntimeException(s"Unexpected Liquibase result: $result}")
     }
