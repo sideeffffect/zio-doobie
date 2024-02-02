@@ -13,6 +13,7 @@ import zio.*
 import zio.interop.catz.*
 
 import java.sql.Connection
+import scala.annotation.nowarn
 import scala.jdk.CollectionConverters.*
 
 object ZIODoobieLiquibase {
@@ -24,17 +25,21 @@ object ZIODoobieLiquibase {
 
   object Config extends ConfigVersionSpecific
 
+  @nowarn("msg=discarded expression")
   private def runMigration(connection: Connection, changeLogFile: String): Unit = {
     import liquibase.Scope
     val db = DatabaseFactory.getInstance.findCorrectDatabaseImplementation(new JdbcConnection(connection))
-    val updateCommand = new CommandScope(UpdateCommandStep.COMMAND_NAME: _*)
+    val updateCommand = new CommandScope(UpdateCommandStep.COMMAND_NAME*)
     updateCommand.addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, db)
     updateCommand.addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, changeLogFile)
     updateCommand.addArgumentValue(ShowSummaryArgument.SHOW_SUMMARY_OUTPUT, UpdateSummaryOutputEnum.LOG)
     // https://github.com/liquibase/liquibase/issues/2396
     Scope.enter(Map[String, AnyRef](Scope.Attr.ui.name() -> new LoggerUIService()).asJava)
     val result = updateCommand.execute().getResults.asScala
-    assert(result.get("statusCode").contains(0), s"Unexpected Liquibase result: $result}")
+    result.get("statusCode") match {
+      case None | Some(0) =>
+      case _              => throw new RuntimeException(s"Unexpected Liquibase result: $result}")
+    }
   }
 
   private def migrate(transactor: Transactor[Task], changeLogFile: String): Task[Unit] = ZIO.scoped {
