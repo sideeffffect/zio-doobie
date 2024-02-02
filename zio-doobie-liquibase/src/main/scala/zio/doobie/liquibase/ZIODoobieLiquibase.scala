@@ -1,11 +1,14 @@
 package zio.doobie.liquibase
 
+import doobie.Transactor
 import doobie.hikari.HikariTransactor
-import doobie.{ExecutionContexts, Transactor}
+import liquibase.UpdateSummaryOutputEnum
+import liquibase.command.CommandScope
+import liquibase.command.core.UpdateCommandStep
+import liquibase.command.core.helpers.{DbUrlConnectionArgumentsCommandStep, ShowSummaryArgument}
+import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
-import liquibase.resource.ClassLoaderResourceAccessor
 import liquibase.ui.LoggerUIService
-import liquibase.{Contexts, Liquibase}
 import zio.*
 import zio.interop.catz.*
 
@@ -23,10 +26,15 @@ object ZIODoobieLiquibase {
 
   private def runMigration(connection: Connection, changeLogFile: String): Unit = {
     import liquibase.Scope
-    val instance = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), new JdbcConnection(connection))
+    val db = DatabaseFactory.getInstance.findCorrectDatabaseImplementation(new JdbcConnection(connection))
+    val updateCommand = new CommandScope(UpdateCommandStep.COMMAND_NAME: _*)
+    updateCommand.addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, db)
+    updateCommand.addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, changeLogFile)
+    updateCommand.addArgumentValue(ShowSummaryArgument.SHOW_SUMMARY_OUTPUT, UpdateSummaryOutputEnum.LOG)
     // https://github.com/liquibase/liquibase/issues/2396
     Scope.enter(Map[String, AnyRef](Scope.Attr.ui.name() -> new LoggerUIService()).asJava)
-    instance.update(new Contexts())
+    val result = updateCommand.execute().getResults.asScala
+    assert(result.get("statusCode").contains(0), s"Unexpected Liquibase result: $result}")
   }
 
   private def migrate(transactor: Transactor[Task], changeLogFile: String): Task[Unit] = ZIO.scoped {
@@ -37,10 +45,7 @@ object ZIODoobieLiquibase {
   }
 
   def make(config: Config): RIO[Scope, Transactor[Task]] = for {
-    // TODO: rework after https://github.com/tpolecat/doobie/pull/1690
-    // HikariConfig.DEFAULT_POOL_SIZE = 10
-    ce <- ExecutionContexts.fixedThreadPool[Task](config.hikari.maximumPoolSize.getOrElse(10)).toScopedZIO
-    transactor <- HikariTransactor.fromConfig[Task](config.hikari, ce).toScopedZIO
+    transactor <- HikariTransactor.fromConfig[Task](config.hikari).toScopedZIO
     _ <- migrate(transactor, config.liquibaseChangeLogFile)
   } yield transactor
 
