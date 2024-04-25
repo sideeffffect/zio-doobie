@@ -9,12 +9,12 @@ import liquibase.command.core.helpers.{DbUrlConnectionArgumentsCommandStep, Show
 import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
 import liquibase.ui.LoggerUIService
-import zio.*
-import zio.interop.catz.*
+import zio._
+import zio.interop.catz._
 
 import java.sql.Connection
 import scala.annotation.nowarn
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters._
 
 object ZIODoobieLiquibase {
 
@@ -26,6 +26,7 @@ object ZIODoobieLiquibase {
   object Config extends ConfigVersionSpecific
 
   @nowarn("msg=discarded expression")
+  @SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.throw"))
   private def runMigration(connection: Connection, changeLogFile: String): Unit = {
     import liquibase.Scope
     val db = DatabaseFactory.getInstance.findCorrectDatabaseImplementation(new JdbcConnection(connection))
