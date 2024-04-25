@@ -1,9 +1,9 @@
 package zio.doobie.liquibase
 
-import zio.config.magnolia.*
+import zio.config.magnolia._
 
 import scala.concurrent.duration.Duration
-import scala.jdk.DurationConverters.*
+import scala.jdk.DurationConverters._
 
 @SuppressWarnings(Array("scalafix:DisableSyntax.valInAbstract")) // it is lazy val
 trait ConfigVersionSpecific {
