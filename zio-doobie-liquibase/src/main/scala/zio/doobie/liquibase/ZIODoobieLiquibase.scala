@@ -30,9 +30,9 @@ object ZIODoobieLiquibase {
     import liquibase.Scope
     val db = DatabaseFactory.getInstance.findCorrectDatabaseImplementation(new JdbcConnection(connection))
     val updateCommand = new CommandScope(UpdateCommandStep.COMMAND_NAME*)
-    updateCommand.addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, db)
-    updateCommand.addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, changeLogFile)
-    updateCommand.addArgumentValue(ShowSummaryArgument.SHOW_SUMMARY_OUTPUT, UpdateSummaryOutputEnum.LOG)
+    val _ = updateCommand.addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, db)
+    val _ = updateCommand.addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, changeLogFile)
+    val _ = updateCommand.addArgumentValue(ShowSummaryArgument.SHOW_SUMMARY_OUTPUT, UpdateSummaryOutputEnum.LOG)
     // https://github.com/liquibase/liquibase/issues/2396
     Scope.enter(Map[String, AnyRef](Scope.Attr.ui.name() -> new LoggerUIService()).asJava)
     val result = updateCommand.execute().getResults.asScala

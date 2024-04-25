@@ -1,12 +1,15 @@
 package zio.doobie.liquibase
 
-import zio.config.ConfigDescriptor
-import zio.config.magnolia.Descriptor
-import zio.doobie.liquibase.ZIODoobieLiquibase.Config
+import zio.config.magnolia.*
+
+import scala.concurrent.duration.Duration
+import scala.jdk.DurationConverters.*
 
 trait ConfigVersionSpecific {
-  implicit lazy val hikariDescriptor: ConfigDescriptor[doobie.hikari.Config] =
-    Descriptor.derived[doobie.hikari.Config].desc
-  implicit lazy val configDescriptor: ConfigDescriptor[Config] =
-    Descriptor.derived[Config].desc
+  private[ConfigVersionSpecific] implicit lazy val durationDeriveConfig: DeriveConfig[Duration] =
+    DeriveConfig[java.time.Duration].map(_.toScala)
+  implicit lazy val hikariDescriptor: DeriveConfig[_root_.doobie.hikari.Config] =
+    DeriveConfig.derived[_root_.doobie.hikari.Config]
+  implicit lazy val configDescriptor: DeriveConfig[ZIODoobieLiquibase.Config] =
+    DeriveConfig.derived[ZIODoobieLiquibase.Config]
 }
