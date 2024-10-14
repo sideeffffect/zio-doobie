@@ -15,6 +15,7 @@ lazy val root = project
     scalaLiquibaseDoobie,
     scalaLiquibaseDoobiePureconfig,
     scalaLiquibaseDoobieZio,
+    scalaLiquibaseDoobieZioConfig,
   )
 
 lazy val scalaLiquibase = project
@@ -67,6 +68,17 @@ lazy val scalaLiquibaseDoobieZio = project
       Dependencies.zio,
       Dependencies.zioCats,
       Dependencies.zioConfig,
+    ),
+  )
+  .enablePlugins(BuildInfoPlugin)
+
+lazy val scalaLiquibaseDoobieZioConfig = project
+  .in(file("scala-liquibase-doobie-zio-config"))
+  .settings(commonSettings)
+  .dependsOn(scalaLiquibaseDoobie)
+  .settings(
+    name := "scala-liquibase-doobie-zio-config",
+    libraryDependencies ++= List(
       Dependencies.zioConfigMagnolia,
     ),
   )
