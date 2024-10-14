@@ -7,6 +7,7 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(
+    name := "liquibase-doobie",
     publish / skip := true,
     mimaReportBinaryIssues := {},
   )
@@ -57,7 +58,6 @@ lazy val `liquibase-doobie-zio` = project
   .dependsOn(`liquibase-doobie`)
   .settings(
     libraryDependencies ++= List(
-      Dependencies.zio,
       Dependencies.zioCats,
     ),
   )
@@ -68,7 +68,6 @@ lazy val `liquibase-doobie-zio-config` = project
   .dependsOn(`liquibase-doobie`)
   .settings(
     libraryDependencies ++= List(
-      Dependencies.zioConfig,
       Dependencies.zioConfigMagnolia,
     ),
   )
