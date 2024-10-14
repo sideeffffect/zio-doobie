@@ -7,22 +7,63 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(
-    name := "zio-doobie",
     publish / skip := true,
     mimaReportBinaryIssues := {},
   )
   .aggregate(
-    zioDoobieLiquibase,
+    scalaLiquibase,
+    scalaLiquibaseDoobie,
+    scalaLiquibaseDoobiePureconfig,
+    scalaLiquibaseDoobieZio,
   )
 
-lazy val zioDoobieLiquibase = project
-  .in(file("zio-doobie-liquibase"))
+lazy val scalaLiquibase = project
+  .in(file("scala-liquibase"))
   .settings(commonSettings)
   .settings(
-    name := "zio-doobie-liquibase",
+    name := "scala-liquibase",
+    libraryDependencies ++= List(
+      Dependencies.liquibase,
+    ),
+  )
+  .enablePlugins(BuildInfoPlugin)
+
+lazy val scalaLiquibaseDoobie = project
+  .in(file("scala-liquibase-doobie"))
+  .settings(commonSettings)
+  .dependsOn(scalaLiquibase)
+  .settings(
+    name := "scala-liquibase-doobie",
     libraryDependencies ++= List(
       Dependencies.doobie,
-      Dependencies.liquibase,
+    ),
+  )
+  .enablePlugins(BuildInfoPlugin)
+
+lazy val scalaLiquibaseDoobiePureconfig = project
+  .in(file("scala-liquibase-doobie-pureconfig"))
+  .settings(commonSettings)
+  .dependsOn(scalaLiquibaseDoobie)
+  .settings(
+    name := "scala-liquibase-doobie-pureconfig",
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, _)) =>
+          List(Dependencies.pureconfigGeneric)
+        case _ =>
+          List(Dependencies.pureconfigGenericScala3)
+      }
+    },
+  )
+  .enablePlugins(BuildInfoPlugin)
+
+lazy val scalaLiquibaseDoobieZio = project
+  .in(file("scala-liquibase-doobie-zio"))
+  .settings(commonSettings)
+  .dependsOn(scalaLiquibaseDoobie)
+  .settings(
+    name := "scala-liquibase-doobie-zio",
+    libraryDependencies ++= List(
       Dependencies.zio,
       Dependencies.zioCats,
       Dependencies.zioConfig,
