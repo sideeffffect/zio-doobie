@@ -12,7 +12,11 @@ import java.sql.Connection
 import scala.annotation.nowarn
 import scala.jdk.CollectionConverters._
 
-object CoreLiquibase {
+trait CoreLiquibase[F[_]] {
+  def runMigration(connection: Connection, changeLogFile: String): F[Unit]
+}
+
+object CoreLiquibase extends CoreLiquibase[({ type lambda[_] = Unit })#lambda] {
 
   @nowarn("msg=discarded expression")
   @SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.throw"))
