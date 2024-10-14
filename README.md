@@ -13,16 +13,19 @@ ZIO and Cats Effect wrappers for [Doobie](https://tpolecat.github.io/doobie/) wi
 "com.github.sideeffffect" %% "liquibase-doobie-zio" % "<version>"
 ```
 
-This library comes with ready-made case class for configuration `ZIODoobieLiquibase.Config` and a layer `ZIODoobieLiquibase.layer` that you can use when composing your application from ZLayers.
+This library comes with ready-made case class for configuration `Config` and a layer `ZIODoobieLiquibase.layer` that you can use when composing your application from ZLayers.
 
 ```scala
+// defined in subproject `liquibase-doobie`
 final case class Config(
   hikari: doobie.hikari.Config,
   liquibaseChangeLogFile: String,
 )
 
-ZIODoobieLiquibase.layer: RLayer[ZIODoobieLiquibase.Config, Transactor[Task]]
+ZIODoobieLiquibase.layer: RLayer[Config, Transactor[Task]]
 ```
+
+### ZIO Config derivation
 
 ```scala
 "com.github.sideeffffect" %% "liquibase-doobie-zio-config" % "<version>"
@@ -34,6 +37,12 @@ For Cats Effect only use
 
 ```scala
 "com.github.sideeffffect" %% "liquibase-doobie" % "<version>"
+```
+
+### Pureconfig
+
+```scala
+"com.github.sideeffffect" %% "liquibase-doobie-pureconfig" % "<version>"
 ```
 
 
