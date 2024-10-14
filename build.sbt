@@ -11,42 +11,36 @@ lazy val root = project
     mimaReportBinaryIssues := {},
   )
   .aggregate(
-    scalaLiquibase,
-    scalaLiquibaseDoobie,
-    scalaLiquibaseDoobiePureconfig,
-    scalaLiquibaseDoobieZio,
-    scalaLiquibaseDoobieZioConfig,
+    `liquibase-core`,
+    `liquibase-doobie`,
+    `liquibase-doobie-pureconfig`,
+    `liquibase-doobie-zio`,
+    `liquibase-doobie-zio-config`,
   )
 
-lazy val scalaLiquibase = project
-  .in(file("scala-liquibase"))
+lazy val `liquibase-core` = project
   .settings(commonSettings)
   .settings(
-    name := "scala-liquibase",
     libraryDependencies ++= List(
       Dependencies.liquibase,
     ),
   )
   .enablePlugins(BuildInfoPlugin)
 
-lazy val scalaLiquibaseDoobie = project
-  .in(file("scala-liquibase-doobie"))
+lazy val `liquibase-doobie` = project
   .settings(commonSettings)
-  .dependsOn(scalaLiquibase)
+  .dependsOn(`liquibase-core`)
   .settings(
-    name := "scala-liquibase-doobie",
     libraryDependencies ++= List(
       Dependencies.doobie,
     ),
   )
   .enablePlugins(BuildInfoPlugin)
 
-lazy val scalaLiquibaseDoobiePureconfig = project
-  .in(file("scala-liquibase-doobie-pureconfig"))
+lazy val `liquibase-doobie-pureconfig` = project
   .settings(commonSettings)
-  .dependsOn(scalaLiquibaseDoobie)
+  .dependsOn(`liquibase-doobie`)
   .settings(
-    name := "scala-liquibase-doobie-pureconfig",
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, _)) =>
@@ -58,27 +52,23 @@ lazy val scalaLiquibaseDoobiePureconfig = project
   )
   .enablePlugins(BuildInfoPlugin)
 
-lazy val scalaLiquibaseDoobieZio = project
-  .in(file("scala-liquibase-doobie-zio"))
+lazy val `liquibase-doobie-zio` = project
   .settings(commonSettings)
-  .dependsOn(scalaLiquibaseDoobie)
+  .dependsOn(`liquibase-doobie`)
   .settings(
-    name := "scala-liquibase-doobie-zio",
     libraryDependencies ++= List(
       Dependencies.zio,
       Dependencies.zioCats,
-      Dependencies.zioConfig,
     ),
   )
   .enablePlugins(BuildInfoPlugin)
 
-lazy val scalaLiquibaseDoobieZioConfig = project
-  .in(file("scala-liquibase-doobie-zio-config"))
+lazy val `liquibase-doobie-zio-config` = project
   .settings(commonSettings)
-  .dependsOn(scalaLiquibaseDoobie)
+  .dependsOn(`liquibase-doobie`)
   .settings(
-    name := "scala-liquibase-doobie-zio-config",
     libraryDependencies ++= List(
+      Dependencies.zioConfig,
       Dependencies.zioConfigMagnolia,
     ),
   )
